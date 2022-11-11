@@ -1,0 +1,14 @@
+Name/cost/required level/damage/mana cost/type/quantity
+Snow_Cannon     500     2   650     250    ice    8    ice    10
+Ice_Blade       250     1   450     100    ice    10    ice    10
+Frost_Blizzard  750     5   850     350    ice    6    ice    6
+Arctic_Storm    700     6   800     300    ice    6    ice    6
+Flame_Tornado   700     4   850     300    fire    6    fire    6
+Breath_of_Fire  350     1   450     100    fire    10   fire    10
+Heat_Wave       450     2   600     150    fire    8   fire    10
+Lava_Comet      800     7   1000    550    fire    6   fire    6
+Hell_Storm      600     3   950     600    fire    8   fire    8
+Lightning_Dagger      400        1       500     150    lightning    10
+Thunder_Blast         750        4       950     400    lightning    6
+Electric_Arrows       550        5       650     200    lightning    6
+Spark_Needles         500        2       600     200    lightning    8
