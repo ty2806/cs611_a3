@@ -159,6 +159,13 @@ abstract public class Hero extends Character {
         }
     }
 
+    public void revive()
+    {
+        setFainted(false);
+        setHp(LevelUpPolicy.updateHealth(getLevel()));
+        setMp(LevelUpPolicy.updateMana(getLevel(), getDexterity()));
+    }
+
     public String toString()
     {
         String state = "Name:" + getName() + " HP:" + getHp() + "/" + LevelUpPolicy.updateHealth(getLevel())

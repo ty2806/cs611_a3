@@ -8,6 +8,7 @@ abstract public class Character {
     private String name;
     private int hp;
     private int level;
+    private int[] location;
 
 
     public String getName() {
@@ -34,7 +35,11 @@ abstract public class Character {
         this.level = level;
     }
 
+    public int[] getLocation() {
+        return location;
+    }
 
-
-
+    public void setLocation(int[] location) {
+        this.location = location;
+    }
 }

@@ -11,58 +11,27 @@ import character.*;
 public class CombatPolicy {
 
     // generate a level number for a monster to match heroes' level
-    // lowest : the lowest level of current hero team
-    // highest: the highest level of current hero team
+    // heroes : a collection of all heroes on board
+    // lane: the lane current invoker located
     // rule: the rule to generate level number
-    //      high : generate a number same as the highest
-    //      low : generate a number same as the lowest
-    //      mix: generate a random number ranging between lowest and highest
-    public static int levelMatch(int lowest, int highest, String rule)
+    //      same : generate a number same as current lane's hero level
+    //      average : generate a number taking average of all heroes' level
+    public static int levelMatch(HeroTeam heroes, int lane, String rule)
     {
         switch (rule)
         {
-            case "high":
-                return highest;
-            case "low":
-                return lowest;
-            case "mix":
-                return ThreadLocalRandom.current().nextInt(lowest, highest + 1);
+            case "same":
+                return heroes.getMember(lane).getLevel();
+            case "average":
+                int average = 0;
+                for (int i = 0; i < heroes.getTeamSize(); i ++) {
+                    average += heroes.getMember(i).getLevel();
+                }
+                average = (int) Math.round(average/(double)heroes.getTeamSize());
+                return average;
             default:
                 System.out.println("rule doesn't exist. Pick a rule from high|low|mix");
                 return -1;
-        }
-    }
-
-    public static int pickTarget(Hero[] heroes, int position, String rule)
-    {
-        int target = 0;
-        for (int i = 0; i < heroes.length; i ++) {
-            if (!heroes[i].isFainted()) {
-                target = i;
-            }
-        }
-
-        switch (rule) {
-            case "direct":
-                if (!heroes[position].isFainted()) {
-                    return position;
-                }
-                else {
-                    return target;
-                }
-            case "lowestHp":
-                int hp = heroes[target].getHp();
-                for (int i = 0; i < heroes.length; i ++) {
-                    if (!heroes[i].isFainted()) {
-                        if (heroes[i].getHp() < hp) {
-                            hp = heroes[i].getHp();
-                            target = i;
-                        }
-                    }
-                }
-                return target;
-            default:
-                return target;
         }
     }
 
@@ -112,23 +81,13 @@ public class CombatPolicy {
         return (int) Math.round(value * 1.1);
     }
 
-    public static int goldReward(ArrayList<Monster> monsters)
+    public static int goldReward(Monster monster)
     {
-        int gold = 0;
-        for (Monster monster : monsters)
-        {
-            gold += monster.getLevel() * 100;
-        }
-        return gold;
+        return 500 * monster.getLevel();
     }
 
-    public static int expReward(ArrayList<Monster> monsters)
+    public static int expReward(Monster monster)
     {
-        int exp = 0;
-        for (Monster monster : monsters)
-        {
-            exp += monster.getLevel() * 2;
-        }
-        return exp;
+        return 2 * monster.getLevel();
     }
 }

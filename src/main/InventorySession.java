@@ -7,60 +7,19 @@ package main;
 import character.Hero;
 import character.HeroTeam;
 import character.Monster;
+import character.MonsterTeam;
 import combat.Combat;
 import inventory.Item;
 import inventory.Potion;
 import inventory.Spell;
 import util.InputParser;
 
+import java.util.ArrayList;
+
 public class InventorySession {
 
-    public void openInventoryInterface(InputParser parser, HeroTeam heroes)
+    public boolean openInventory(InputParser parser, Hero hero, HeroTeam heroes, MonsterTeam monsters, ArrayList<Integer> enemyInRange, Combat combat)
     {
-        while (true) {
-            for (int i = 0; i < heroes.getTeamSize(); i ++) {
-                Hero hero = heroes.getMember(i);
-                System.out.println(i + ". " + hero);
-            }
-            System.out.println("Choose a hero's bag to open");
-            System.out.println("Enter a number before each hero to open his bag or enter q to quit inventory interface");
-
-            String command = commandSelection(parser, heroes.getTeamSize());
-            if (command.equals("q")) {
-                break;
-            }
-            else {
-                Hero hero = heroes.getMember(Integer.parseInt(command));
-                safeOpenInventory(parser, hero, heroes);
-            }
-        }
-    }
-
-    public void safeOpenInventory(InputParser parser, Hero hero, HeroTeam heroes)
-    {
-        while (true){
-            int index = chooseItem(parser, hero);
-            if (index < 0) {
-                break;
-            }
-
-            Item item = hero.getBag().getItem(index);
-            if (item instanceof Spell) {
-                System.out.println("A spell cannot be used under safe circumstance. Choose another item instead.");
-            }
-            else if (item instanceof Potion) {
-                drinkPotion(parser, heroes, hero, index);
-            }
-            else {
-                hero.equipFromBag(index);
-            }
-        }
-    }
-
-    public boolean combatOpenInventory(InputParser parser, Hero hero, Combat combat)
-    {
-        HeroTeam heroes = combat.getHeroes();
-        Monster[] monsters = combat.getBoard().getMonsterSide();
         while (true) {
             int index = chooseItem(parser, hero);
             if (index < 0) {
@@ -70,7 +29,13 @@ public class InventorySession {
             Item item = hero.getBag().getItem(index);
             boolean successUse;
             if (item instanceof Spell) {
-                successUse = castSpell(parser, hero, index, monsters, combat);
+                if (enemyInRange.size() > 0) {
+                    successUse = castSpell(parser, hero, index, enemyInRange, monsters, combat);
+                }
+                else {
+                    System.out.println("A spell cannot be used under safe circumstance. Choose another item instead.");
+                    successUse = false;
+                }
             } else if (item instanceof Potion) {
                 successUse = drinkPotion(parser, heroes, hero, index);
             } else {
@@ -122,37 +87,28 @@ public class InventorySession {
         }
     }
 
-    public boolean castSpell(InputParser parser, Hero hero, int index, Monster[] monsters, Combat combat)
+    public boolean castSpell(InputParser parser, Hero hero, int index, ArrayList<Integer> enemyInRange, MonsterTeam monsters, Combat combat)
     {
-        for (int i = 0; i < monsters.length; i ++) {
-            if (combat.isValidTarget(i)) {
-                System.out.println(i + " " + monsters[i]);
-            }
-        }
+        int monsterIndex = BoardSession.chooseEnemy(parser, enemyInRange, monsters);
 
+        Monster monster = monsters.getMember(monsterIndex);
         Spell spell = (Spell) hero.getBag().getItem(index);
-        System.out.println("Choose a monster to use spell " + spell.getName());
-        System.out.println("Enter a number before each monster to choose or enter q to stop casting spell");
-
-        String command = commandSelection(parser, monsters.length);
-        if (command.equals("q")) {
+        if (!combat.castSpell(hero, monster, spell)) {
             return false;
         }
-        else {
-            int monsterIndex = Integer.parseInt(command);
-            if (!combat.isValidTarget(monsterIndex)) {
-                System.out.println("This position has no monster. This use is not valid");
-                return false;
-            }
-            if (!combat.castSpell(hero, monsterIndex, spell)) {
-                return false;
-            }
-            if (spell.getQuantity() == 0) {
-                hero.getBag().removeItem(index);
-                System.out.println(spell.getName() + " is exhausted.");
-            }
-            return true;
+        if (spell.getQuantity() == 0) {
+            hero.getBag().removeItem(index);
+            System.out.println(spell.getName() + " is exhausted.");
         }
+
+        if (monster.getHp() <= 0) {
+            BoardSession.removeMonster(monsterIndex, monsters);
+            System.out.println(monster.getName() + " is slayed by " + hero.getName());
+            combat.distributeReward(hero, monster);
+        }
+
+        return true;
+
     }
 
     public String commandSelection(InputParser parser, int upperbound)

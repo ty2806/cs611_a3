@@ -5,8 +5,6 @@
 package main;
 
 import util.*;
-import combat.*;
-import market.*;
 import board.*;
 import character.*;
 import inventory.*;
@@ -55,19 +53,17 @@ public class RunGame {
         return map;
     }
 
-    public HeroTeam initHeroes(InputParser parser)
+    public HeroTeam initHeroes(InputParser parser, Board map, InitialLocations loc)
     {
-        System.out.println("Please specify number of heroes. The minimum number is 1 and the maximum number is 3.");
-        parser.parseInputToInt(1, 3);
-        int number = parser.getParsedInt();
+        map.printBoard();
 
         HeroGenerator generator = new HeroGenerator(WARRIOR_FILE, SORCERER_FILE, PALADIN_FILE);
 
         generator.printLists();
 
         HeroTeam team = new HeroTeam();
-        for (int i = 0; i < number; i ++) {
-            System.out.println("Please choose a hero to join your team. Pick a hero by enter the number before each hero's name.");
+        for (int i = 0; i < 3; i ++) {
+            System.out.println("Please choose a hero to join lane" + (i+1) + ". Pick a hero by enter the number before each hero's name.");
             parser.parseInputToInt(0, generator.getWarriorList().size()+generator.getSorcererList().size()+generator.getPaladinList().size());
             int index = parser.getParsedInt();
             Hero hero;
@@ -81,8 +77,22 @@ public class RunGame {
                 hero = generator.generateHero(index, "warrior");
             }
 
-            System.out.println(hero.getName() + " joined your team.");
+            System.out.println(hero.getName() + " joined lane" + (i+1));
             team.addMember(hero);
+
+            switch (i) {
+                case 0:
+                    hero.setLocation(loc.getLane1HeroBirthplace());
+                    break;
+                case 1:
+                    hero.setLocation(loc.getLane2HeroBirthplace());
+                    break;
+                case 2:
+                    hero.setLocation(loc.getLane3HeroBirthplace());
+                    break;
+            }
+
+            //TODO: 11/13/2022 add hero to map
         }
         return team;
     }
@@ -93,15 +103,14 @@ public class RunGame {
 
         Board map = initMap(parser);
 
-        HeroTeam heroes = initHeroes(parser);
+        InitialLocations loc = new InitialLocations();
 
-        int y = rand.nextInt(map.getHeight());
-        int x = rand.nextInt(map.getWidth());
-        map.setupBirthplace(heroes, x, y);
+        HeroTeam heroes = initHeroes(parser, map, loc);
 
         ItemGenerator itemGenerator = new ItemGenerator(WEAPON_FILE, ARMOR_FILE, POTION_FILE, SPELL_FILE);
         MonsterGenerator monsterGenerator = new MonsterGenerator(DRAGON_FILE, EXOSKELETONS_FILE, SPIRITS_FILE);
-        BoardSession boardSession = new BoardSession(itemGenerator, monsterGenerator, parser, map, heroes, x, y);
+        MonsterTeam monsters = new MonsterTeam();
+        BoardSession boardSession = new BoardSession(itemGenerator, monsterGenerator, parser, map, heroes, monsters, loc);
         boardSession.runBoard();
     }
 }

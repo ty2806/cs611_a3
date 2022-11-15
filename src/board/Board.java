@@ -99,6 +99,11 @@ public class Board {
         return board[y][x].getTerrain().accessPolicy();
     }
 
+    public boolean isInAttackRange(int[] a, int[] b)
+    {
+        return Math.abs(b[0] - a[0]) <= 1 && Math.abs(b[1] - a[1]) <= 1;
+    }
+
     public boolean isEncounterMonster(int x, int y)
     {
         return board[y][x].getTerrain().encounterEnemyPolicy();
