@@ -26,8 +26,11 @@ public class Move {
             return false;
         }
 
-        if (position[1] == 2 || position[1] == 5)
+        if (board[position[1]][position[0]].getTerrain() instanceof InaccessibleTerrain)
             return false;
+
+        // if (position[1] == 2 || position[1] == 5)
+
         // TODO: 20-11-2022 add other general res
         return true;
     }

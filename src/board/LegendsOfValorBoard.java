@@ -67,7 +67,7 @@ public class LegendsOfValorBoard {
     }
 
     public boolean makeMoveHero(int[] origin, int[] destination, String moveType) {
-        boolean specialRestriction = false;
+        boolean specialRestriction = false, moveResult = true;
         switch (moveType) {
             case "Teleport":
                 Teleport TEL = new Teleport();
@@ -83,7 +83,19 @@ public class LegendsOfValorBoard {
                 break;
         }
         Move move = new Move();
-        return move.move(origin, destination, board, specialRestriction);
+        moveResult = move.move(origin, destination, board, specialRestriction);
+        if (moveResult)
+            resetBuff(board[destination[1]][destination[0]].getHero());
+        return moveResult;
+    }
+
+    public void resetBuff(Hero hero) {
+        int[] position = hero.getLocation();
+        if (board[position[1]][position[0]].getTerrain() instanceof LOVPlainsCell) {
+            hero.setStrength(hero.getOriginalStrength());
+            hero.setOriginalDexterity(hero.getDexterity());
+            hero.setOriginalAgility(hero.getOriginalAgility());
+        }
     }
 
     public void makeMoveMonster(int[] origin, int[] destination) {
