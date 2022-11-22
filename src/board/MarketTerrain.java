@@ -22,8 +22,13 @@ public class MarketTerrain extends Terrain{
         return true;
     }
 
+    @Override
+    public String IncreaseAbility() {
+        return null;
+    }
+    @Override
     public String toString()
     {
-        return "$";
+        return "M";
     }
 }

@@ -4,40 +4,57 @@
  */
 
 package board;
-import character.HeroTeam;
+
+import character.Hero;
+import character.Monster;
+
 public class Tile {
     private Terrain terrain;
-    private HeroTeam heroes;
+    private Hero hero;
+    private Monster monster;
 
-    public Tile(Terrain t)
-    {
+    public Tile(Terrain t) {
         setTerrain(t);
-        heroes = null;
+        hero = null;
     }
 
-    public void setTerrain(Terrain t)
-    {
+    public void setTerrain(Terrain t) {
         terrain = t;
     }
 
-    public Terrain getTerrain()
-    {
+    public Terrain getTerrain() {
         return terrain;
     }
 
-    public HeroTeam getHeroes() {
-        return heroes;
+    public Hero getHero() {
+        return hero;
     }
 
-    public void setHeroes(HeroTeam heroes) {
-        this.heroes = heroes;
+    public void setHero(Hero hero) {
+        this.hero = hero;
+    }
+
+    public Monster getMonster() {
+        return monster;
+    }
+
+    public void setMonster(Monster monster) {
+        this.monster = monster;
     }
 
     public String toString() {
-        if (heroes != null) {
-            return "P";
+        String s = "";
+        s += terrain.toString();
+
+        if (hero != null) {
+            s += "H" + hero.getLane();
         } else {
-            return terrain.toString();
+            s += "  ";
         }
+
+        if (monster != null) {
+            s += "M";
+        }
+        return s;
     }
 }

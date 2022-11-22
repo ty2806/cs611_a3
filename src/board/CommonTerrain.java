@@ -35,6 +35,11 @@ public class CommonTerrain extends Terrain{
         return false;
     }
 
+    @Override
+    public String IncreaseAbility() {
+        return null;
+    }
+
     public String toString()
     {
         return " ";

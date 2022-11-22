@@ -5,11 +5,17 @@
 package board;
 
 abstract public class Terrain {
-    public Terrain() {}
+
+    public Terrain() {
+    }
 
     abstract public boolean accessPolicy();
 
     abstract public boolean encounterEnemyPolicy();
 
     abstract public boolean MarketPolicy();
+
+    abstract public String IncreaseAbility();
+
+    abstract public String toString();
 }
