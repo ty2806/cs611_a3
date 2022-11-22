@@ -16,8 +16,13 @@ abstract public class Hero extends Character {
     private Inventory bag;
     private Equipment equipment;
     private boolean isFainted;
+    private int lane;
 
-    public Hero(String name, int hp, int level, int mp, int strength, int dexterity, int agility, int gold, int exp) {
+    private int originalStrength;
+    private int originalAgility;
+    private int originalDexterity;
+
+    public Hero(String name, int hp, int level, int mp, int strength, int dexterity, int agility, int gold, int exp, int lane) {
         setName(name);
         setHp(hp);
         setLevel(level);
@@ -29,7 +34,11 @@ abstract public class Hero extends Character {
         setExp(exp);
         setBag(new Inventory());
         setEquipment(new Equipment());
+        setOriginalAgility(agility);
+        setOriginalStrength(strength);
+        setOriginalDexterity(dexterity);
         isFainted = false;
+        this.lane = lane;
     }
 
     public int getExp() {
@@ -72,6 +81,30 @@ abstract public class Hero extends Character {
         this.agility = agility;
     }
 
+    public int getOriginalStrength() {
+        return originalStrength;
+    }
+
+    public void setOriginalStrength(int originalStrength) {
+        this.originalStrength = originalStrength;
+    }
+
+    public int getOriginalAgility() {
+        return originalAgility;
+    }
+
+    public void setOriginalAgility(int originalAgility) {
+        this.originalAgility = originalAgility;
+    }
+
+    public int getOriginalDexterity() {
+        return originalDexterity;
+    }
+
+    public void setOriginalDexterity(int originalDexterity) {
+        this.originalDexterity = originalDexterity;
+    }
+
     public int getGold() {
         return gold;
     }
@@ -104,14 +137,20 @@ abstract public class Hero extends Character {
         isFainted = fainted;
     }
 
-    public void gainExp(int exp)
-    {
+    public int getLane() {
+        return lane;
+    }
+
+    public void setLane(int lane) {
+        this.lane = lane;
+    }
+
+    public void gainExp(int exp) {
         this.exp += exp;
         levelUp();
     }
 
-    public boolean equipFromBag(int index)
-    {
+    public boolean equipFromBag(int index) {
         Item item = bag.getItem(index);
         if (item instanceof Weapon) {
             if (!equipment.getWeaponSlot().getName().equals("empty")) {
@@ -120,37 +159,32 @@ abstract public class Hero extends Character {
             equipment.equipWeapon((Weapon) bag.removeItem(index));
             System.out.println("Weapon " + item.getName() + " is equipped.");
             return true;
-        }
-        else if (item instanceof Armor) {
+        } else if (item instanceof Armor) {
             if (!equipment.getArmorSlot().getName().equals("empty")) {
                 bag.addItem(equipment.getArmorSlot());
             }
             equipment.equipArmor((Armor) bag.removeItem(index));
             System.out.println("Armor " + item.getName() + " is equipped.");
             return true;
-        }
-        else {
+        } else {
             System.out.println("This is not a valid equipment. Please choose another one.");
             return false;
         }
     }
 
-    public void gainGold(int gold)
-    {
+    public void gainGold(int gold) {
         this.gold += gold;
     }
 
-    public void loseGold(int gold)
-    {
-        if (this.gold < gold){
+    public void loseGold(int gold) {
+        if (this.gold < gold) {
             System.out.println("A hero's gold cannot be negative!");
             throw new IllegalArgumentException();
         }
         this.gold -= gold;
     }
 
-    public void levelUp()
-    {
+    public void levelUp() {
         while (exp >= LevelUpPolicy.expRequired(getLevel())) {
             exp -= LevelUpPolicy.expRequired(getLevel());
             setLevel(getLevel() + 1);
@@ -159,15 +193,13 @@ abstract public class Hero extends Character {
         }
     }
 
-    public void revive()
-    {
+    public void revive() {
         setFainted(false);
         setHp(LevelUpPolicy.updateHealth(getLevel()));
         setMp(LevelUpPolicy.updateMana(getLevel(), getDexterity()));
     }
 
-    public String toString()
-    {
+    public String toString() {
         String state = "Name:" + getName() + " HP:" + getHp() + "/" + LevelUpPolicy.updateHealth(getLevel())
                 + " MP:" + getMp() + "/" + LevelUpPolicy.updateMana(getLevel(), getDexterity())
                 + " Exp:" + getExp() + "/" + LevelUpPolicy.expRequired(getLevel())
