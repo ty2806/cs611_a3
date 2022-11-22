@@ -27,57 +27,41 @@ public class RunGame {
 
     private Random rand;
 
-    public RunGame()
-    {
+    public RunGame() {
         rand = new Random();
     }
 
-    public Board initMap(InputParser parser)
-    {
-        System.out.println("Please specify map size. The minimum size is 3 and the maximum size is 30.");
-        parser.parseInputToInt(3, 30);
-        int size = parser.getParsedInt();
+    public LegendsOfValorBoard initMap(InputParser parser) {
 
-        Board map = new Board(size);
+        LegendsOfValorBoard map = new LegendsOfValorBoard(8);
 
-        System.out.println("Please specify the percentage of inaccessible terrain in this map. The allowed range is 0 to 50.");
-        parser.parseInputToInt(0, 50);
-        int inaccessibleRatio = parser.getParsedInt();
-
-        System.out.println("Please specify the percentage of market terrain in this map. The allowed range is 0 to " + (100 - inaccessibleRatio) + ".");
-        parser.parseInputToInt(0, 100 - inaccessibleRatio);
-        int marketRatio = parser.getParsedInt();
-
-        map.initBoard(inaccessibleRatio*0.01, marketRatio*0.01);
-
+        //map.initBoard(inaccessibleRatio * 0.01, marketRatio * 0.01);
+        map.initBoard(0, 0);
+        System.out.println("Printing map\n\n" + map.toString());
         return map;
     }
 
-    public HeroTeam initHeroes(InputParser parser, Board map, InitialLocations loc)
-    {
-        map.printBoard();
+    public HeroTeam initHeroes(InputParser parser, LegendsOfValorBoard map, InitialLocations loc) {
 
         HeroGenerator generator = new HeroGenerator(WARRIOR_FILE, SORCERER_FILE, PALADIN_FILE);
 
         generator.printLists();
 
         HeroTeam team = new HeroTeam();
-        for (int i = 0; i < 3; i ++) {
-            System.out.println("Please choose a hero to join lane" + (i+1) + ". Pick a hero by enter the number before each hero's name.");
-            parser.parseInputToInt(0, generator.getWarriorList().size()+generator.getSorcererList().size()+generator.getPaladinList().size());
+        for (int i = 0; i < 3; i++) {
+            System.out.println("Please choose a hero to join lane" + (i + 1) + ". Pick a hero by enter the number before each hero's name.");
+            parser.parseInputToInt(0, generator.getWarriorList().size() + generator.getSorcererList().size() + generator.getPaladinList().size());
             int index = parser.getParsedInt();
             Hero hero;
-            if (index >= generator.getWarriorList().size()+generator.getSorcererList().size()) {
-                hero = generator.generateHero(index - (generator.getWarriorList().size()+generator.getSorcererList().size()), "paladin");
-            }
-            else if (index >= generator.getWarriorList().size()) {
-                hero = generator.generateHero(index - generator.getWarriorList().size(), "sorcerer");
-            }
-            else {
-                hero = generator.generateHero(index, "warrior");
+            if (index >= generator.getWarriorList().size() + generator.getSorcererList().size()) {
+                hero = generator.generateHero(index - (generator.getWarriorList().size() + generator.getSorcererList().size()), "paladin", i + 1);
+            } else if (index >= generator.getWarriorList().size()) {
+                hero = generator.generateHero(index - generator.getWarriorList().size(), "sorcerer", i + 1);
+            } else {
+                hero = generator.generateHero(index, "warrior", i + 1);
             }
 
-            System.out.println(hero.getName() + " joined lane" + (i+1));
+            System.out.println(hero.getName() + " joined lane" + (i + 1));
             team.addMember(hero);
 
             switch (i) {
@@ -92,16 +76,17 @@ public class RunGame {
                     break;
             }
 
-            //TODO: 11/13/2022 add hero to map
+            map.addHero(hero);
+
+            System.out.println(map);
         }
         return team;
     }
 
-    public void run(Scanner userInput)
-    {
+    public void run(Scanner userInput) {
         InputParser parser = new InputParser(userInput);
 
-        Board map = initMap(parser);
+        LegendsOfValorBoard map = initMap(parser);
 
         InitialLocations loc = new InitialLocations();
 
@@ -110,7 +95,8 @@ public class RunGame {
         ItemGenerator itemGenerator = new ItemGenerator(WEAPON_FILE, ARMOR_FILE, POTION_FILE, SPELL_FILE);
         MonsterGenerator monsterGenerator = new MonsterGenerator(DRAGON_FILE, EXOSKELETONS_FILE, SPIRITS_FILE);
         MonsterTeam monsters = new MonsterTeam();
-        BoardSession boardSession = new BoardSession(itemGenerator, monsterGenerator, parser, map, heroes, monsters, loc);
-        boardSession.runBoard();
+        System.exit(0);
+        //BoardSession boardSession = new BoardSession(itemGenerator, monsterGenerator, parser, map, heroes, monsters, loc);
+        //boardSession.runBoard();
     }
 }
