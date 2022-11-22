@@ -67,6 +67,7 @@ public class BoardSession {
 
             chooseActionLoop:
             while (true) {
+                System.out.println("Now it is hero "+hero.getName()+"'s turn.");
                 String command = mapControl(hero.getLocation(), enemyInRange.size()>0);
                 switch (command) {
                     case "q":
@@ -133,7 +134,7 @@ public class BoardSession {
             System.out.println("You are near a Market! You can input M/m to enter this market");
         }
 
-        System.out.println("You can control your team by following commands");
+        System.out.println("You can control your hero by following commands");
         if (hasEnemy) {
             System.out.print("K/k:attack enemy");
         }

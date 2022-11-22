@@ -22,9 +22,6 @@ public class MonsterGenerator {
         dragonList = DataParser.parse(dragonFile);
         exoskeletonList = DataParser.parse(exoskeletonFile);
         spiritList = DataParser.parse(spiritFile);
-        System.out.println(dragonList);
-        System.out.println(exoskeletonList);
-        System.out.println(spiritList);
     }
 
     public ArrayList<ArrayList<String>> getDragonList() {

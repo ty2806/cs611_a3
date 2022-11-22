@@ -112,7 +112,6 @@ public class LegendsOfValorBoard {
             //for (int k = 0; k < 3; k++) {
             for (int j = 0; j < board[i].length; j++) {
                 Tile lovcell = board[i][j];
-                System.out.println("print lovcell:" + lovcell);
                 if (!(lovcell == null)) {
                     if (lovcell.toString().substring(0, 1).equalsIgnoreCase("V"))
                         gameBoard += ANSI_RED_BACKGROUND + ANSI_BLACK;
@@ -148,7 +147,7 @@ public class LegendsOfValorBoard {
         }
     }
 
-    public void initBoard(double inaccessibleRatio, double marketRatio) {
+    public void initBoard() {
         Random random = new Random();
         //Tile[][] board = new Tile[default_size][default_size];
         int num;
@@ -156,10 +155,8 @@ public class LegendsOfValorBoard {
             for (int j = 0; j < height; j++) {
                 if (j == 2 || j == 5) {
                     board[i][j] = new Tile(new LOVInaccesibleCell());
-                    System.out.println("Initialising Inaccessible Cell");
                 } else {
                     if (i == height - 1) {
-                        System.out.println("Initialising Hero Nexus Cell");
                         board[i][j] = new Tile(new LOVHeroNexus());
                     } else if (i == 0)
                         board[i][j] = new Tile(new LOVMonsterNexus());

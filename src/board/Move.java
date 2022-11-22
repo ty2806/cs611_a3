@@ -3,7 +3,7 @@ package board;
 public class Move {
 
     public boolean move(int[] origin, int[] destination, Tile[][] board, boolean sr) {
-        if (generalRestriction(destination, board) && sr) {
+        if (generalRestriction(origin, destination, board) && sr) {
             board[destination[1]][destination[0]].setHero(board[origin[1]][origin[0]].getHero());
             board[origin[1]][origin[0]].setHero(null);
             return true;
@@ -18,25 +18,33 @@ public class Move {
         board[origin[1]][origin[0]].setMonster(null);
     }
 
-    public boolean generalRestriction(int[] position, Tile[][] board) {
+    public boolean generalRestriction(int[] origin, int[] position, Tile[][] board) {
+        boolean value = true;
         if (position[0] < 0 || position[0] >= 8 || position[1] < 0 || position[1] >= 8) {
-            return false;
+            System.out.println("condi 1");
+            value = false;
         }
 
         if (!board[position[1]][position[0]].getTerrain().accessPolicy()) {
-            return false;
+            System.out.println("condi 2");
+            value = false;
         }
 
         Tile tile = board[position[1]][position[0]];
         if (tile.getHero() != null) {
-            return false;
+            System.out.println("condi 3");
+            value = false;
         }
 
-        if (board[position[1] - 1][position[0]].getMonster() == null || board[position[1] - 1][position[0] - 1].getMonster() == null || board[position[1] - 1][position[0] + 1].getMonster() == null) {
-            return false;
-        }
 
-        return true;
+        /*if (board[position[1] + 1][position[0]].getMonster() != null || board[position[1] + 1][position[0] - 1].getMonster() != null || board[position[1] + 1][position[0] + 1].getMonster() != null) {
+            System.out.println("condi 4");
+            value = false;
+        }*/
+
+        System.out.println("General Restrictioin = "+value);
+
+        return value;
         // TODO: 20-11-2022 add other general res
     }
 }

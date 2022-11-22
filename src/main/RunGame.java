@@ -35,8 +35,7 @@ public class RunGame {
 
         LegendsOfValorBoard map = new LegendsOfValorBoard(8);
 
-        //map.initBoard(inaccessibleRatio * 0.01, marketRatio * 0.01);
-        map.initBoard(0, 0);
+        map.initBoard();
         System.out.println("Printing map\n\n" + map.toString());
         return map;
     }
@@ -49,7 +48,7 @@ public class RunGame {
 
         HeroTeam team = new HeroTeam();
         for (int i = 0; i < 3; i++) {
-            System.out.println("Please choose a hero to join lane" + (i + 1) + ". Pick a hero by enter the number before each hero's name.");
+            System.out.println("Please choose a hero to join lane " + (i + 1) + ". Pick a hero by enter the number before each hero's name.");
             parser.parseInputToInt(0, generator.getWarriorList().size() + generator.getSorcererList().size() + generator.getPaladinList().size());
             int index = parser.getParsedInt();
             Hero hero;
