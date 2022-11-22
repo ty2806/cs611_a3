@@ -8,6 +8,7 @@ public class Move {
             board[origin[1]][origin[0]].setHero(null);
             return true;
         }
+
         System.out.println("Illegal move, please try again!");
         return false;
     }
@@ -21,17 +22,21 @@ public class Move {
         if (position[0] < 0 || position[0] >= 8 || position[1] < 0 || position[1] >= 8) {
             return false;
         }
+
+        if (!board[position[1]][position[0]].getTerrain().accessPolicy()) {
+            return false;
+        }
+
         Tile tile = board[position[1]][position[0]];
         if (tile.getHero() != null) {
             return false;
         }
 
-        if (board[position[1]][position[0]].getTerrain() instanceof InaccessibleTerrain)
+        if (board[position[1] - 1][position[0]].getMonster() == null || board[position[1] - 1][position[0] - 1].getMonster() == null || board[position[1] - 1][position[0] + 1].getMonster() == null) {
             return false;
+        }
 
-        // if (position[1] == 2 || position[1] == 5)
-
-        // TODO: 20-11-2022 add other general res
         return true;
+        // TODO: 20-11-2022 add other general res
     }
 }

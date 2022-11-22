@@ -50,6 +50,11 @@ public class LegendsOfValorBoard {
     }
 
     public void buffHero(Hero hero) {
+
+        hero.setStrength(hero.getOriginalStrength());
+        hero.setOriginalDexterity(hero.getDexterity());
+        hero.setOriginalAgility(hero.getOriginalAgility());
+
         int[] loc = hero.getLocation();
         String buff = board[loc[1]][loc[0]].getTerrain().IncreaseAbility();
         switch (buff) {
@@ -84,19 +89,9 @@ public class LegendsOfValorBoard {
         }
         Move move = new Move();
         moveResult = move.move(origin, destination, board, specialRestriction);
-        if (moveResult)
-            resetBuff(board[destination[1]][destination[0]].getHero());
         return moveResult;
     }
 
-    public void resetBuff(Hero hero) {
-        int[] position = hero.getLocation();
-        if (board[position[1]][position[0]].getTerrain() instanceof LOVPlainsCell) {
-            hero.setStrength(hero.getOriginalStrength());
-            hero.setOriginalDexterity(hero.getDexterity());
-            hero.setOriginalAgility(hero.getOriginalAgility());
-        }
-    }
 
     public void makeMoveMonster(int[] origin, int[] destination) {
         Move move = new Move();
