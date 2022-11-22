@@ -60,19 +60,23 @@ public class LegendsOfValorBoard {
         switch (buff) {
             case "Strength":
                 hero.setStrength((int) (hero.getStrength() * 1.1));
+                System.out.println("hero receives a strength bonus on current terrain.");
                 break;
             case "Agility":
                 hero.setAgility((int) (hero.getAgility() * 1.1));
+                System.out.println("hero receives an agility bonus on current terrain.");
                 break;
             case "Dexterity":
                 hero.setDexterity((int) (hero.getDexterity() * 1.1));
+                System.out.println("hero receives an dexterity bonus on current terrain.");
+                break;
+            default:
                 break;
         }
-        // TODO: 20-11-2022 implement buff to hero
     }
 
     public boolean makeMoveHero(int[] origin, int[] destination, String moveType) {
-        boolean specialRestriction = false, moveResult = true;
+        boolean specialRestriction = false;
         switch (moveType) {
             case "Teleport":
                 Teleport TEL = new Teleport();
@@ -88,7 +92,7 @@ public class LegendsOfValorBoard {
                 break;
         }
         Move move = new Move();
-        moveResult = move.move(origin, destination, board, specialRestriction);
+        boolean moveResult = move.move(origin, destination, board, specialRestriction);
         return moveResult;
     }
 
@@ -127,7 +131,7 @@ public class LegendsOfValorBoard {
                         gameBoard += ANSI_PURPLE_BACKGROUND + ANSI_BLACK;
                     if (lovcell.toString().substring(0, 1).equalsIgnoreCase("B"))
                         gameBoard += ANSI_CYAN_BACKGROUND + ANSI_BLACK;
-                    gameBoard += lovcell.toString() + " " + ANSI_RESET;
+                    gameBoard += lovcell.toString() + "" + ANSI_RESET;
                 } else
                     gameBoard += " ";
 
@@ -136,15 +140,6 @@ public class LegendsOfValorBoard {
             //}
         }
         return gameBoard;
-    }
-
-    public boolean checkCellAccess(int row, int col) {
-        Tile temp = getCell(row, col);
-        if (!temp.toString().equalsIgnoreCase(" ") || row > 7 || col > 7 || row < 0 || col < 0) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public void initBoard() {

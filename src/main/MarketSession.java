@@ -22,14 +22,11 @@ public class MarketSession {
         this.rand = new Random();
     }
 
-    public void runMarket(InputParser parser, HeroTeam heroes, LegendsOfValorBoard map)
+    public void runMarket(InputParser parser, Hero hero, LegendsOfValorBoard map)
     {
         Market market = new Market(itemGenerator, rand.nextInt(10)+10);
         market.printMarket();
-        for (int i = 0; i < heroes.getTeamSize(); i ++) {
-            Hero hero = heroes.getMember(i);
-            trade(parser, hero, market, map);
-        }
+        trade(parser, hero, market, map);
     }
 
     public void trade(InputParser parser, Hero customer, Market market, LegendsOfValorBoard map)

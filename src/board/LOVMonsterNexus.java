@@ -21,7 +21,7 @@ public class LOVMonsterNexus extends Terrain {
 
     @Override
     public String IncreaseAbility() {
-        return null;
+        return "";
     }
     @Override
     public String toString()

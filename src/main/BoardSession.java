@@ -74,10 +74,14 @@ public class BoardSession {
                         exitGame();
                         break;
                     case "i":
-                        infoSession.showInfo(parser, heroes);
+                        infoSession.showInfo(parser, heroes, monsters);
                         break;
                     case "m":
-                        marketSession.runMarket(parser, heroes, map);
+                        if (map.isMarket(hero.getLocation()[0], hero.getLocation()[1])) {
+                            marketSession.runMarket(parser, hero, map);
+                        } else {
+                            System.out.println("There are no markets nearby.");
+                        }
                         break;
                     case "b":
                         boolean successUse = inventorySession.openInventory(parser, hero, heroes, monsters, enemyInRange, combat, map);
@@ -86,11 +90,15 @@ public class BoardSession {
                         }
                         break;
                     case "k":
-                        heroAttack(hero, enemyInRange, combat);
+                        if (enemyInRange.size()>0) {
+                            heroAttack(hero, enemyInRange, combat);
+                        }
+                        System.out.println("No monsters in your attack range.");
                         break chooseActionLoop;
                     default:
                         boolean validMove = moveHero(command, hero);
                         if (validMove) {
+                            map.buffHero(hero);
                             checkHeroWin(hero);
                             break chooseActionLoop;
                         }
@@ -179,7 +187,7 @@ public class BoardSession {
                 dest[0] += 1;
                 break;
             case "t":
-                dest = inputTeleport();
+                dest = inputTeleport(hero.getLane());
                 moveType = "Teleport";
                 break;
             case "r":
@@ -199,7 +207,7 @@ public class BoardSession {
         }
     }
 
-    public int[] inputTeleport()
+    public int[] inputTeleport(int lane)
     {
         int[] location = new int[2];
         System.out.println("Please enter the row and column you wish to teleport.");
@@ -215,9 +223,9 @@ public class BoardSession {
     {
         int lane = hero.getLane();
         switch (lane) {
-            case 0:
-                return loc.getLane1HeroBirthplace();
             case 1:
+                return loc.getLane1HeroBirthplace();
+            case 2:
                 return loc.getLane2HeroBirthplace();
             default:
                 return loc.getLane3HeroBirthplace();
@@ -237,6 +245,7 @@ public class BoardSession {
             else {
                 int[] dest = new int[]{monster.getLocation()[0], monster.getLocation()[1]+1};
                 map.makeMoveMonster(monster.getLocation(), dest);
+                monster.setLocation(dest);
                 checkMonsterWin(monster);
             }
         }

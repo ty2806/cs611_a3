@@ -1,9 +1,11 @@
 package board;
 
+import java.util.Arrays;
+
 public class Move {
 
     public boolean move(int[] origin, int[] destination, Tile[][] board, boolean sr) {
-        if (generalRestriction(origin, destination, board) && sr) {
+        if (generalRestriction(destination, board) && sr) {
             board[destination[1]][destination[0]].setHero(board[origin[1]][origin[0]].getHero());
             board[origin[1]][origin[0]].setHero(null);
             return true;
@@ -14,11 +16,12 @@ public class Move {
     }
 
     public void monsterMove(int[] origin, int[] destination, Tile[][] board) {
+        System.out.println("monster move from " + Arrays.toString(origin) + " to " + Arrays.toString(destination));
         board[destination[1]][destination[0]].setMonster(board[origin[1]][origin[0]].getMonster());
         board[origin[1]][origin[0]].setMonster(null);
     }
 
-    public boolean generalRestriction(int[] origin, int[] position, Tile[][] board) {
+    public boolean generalRestriction(int[] position, Tile[][] board) {
         boolean value = true;
         if (position[0] < 0 || position[0] >= 8 || position[1] < 0 || position[1] >= 8) {
             System.out.println("condi 1");
@@ -36,15 +39,20 @@ public class Move {
             value = false;
         }
 
-
-        /*if (board[position[1] + 1][position[0]].getMonster() != null || board[position[1] + 1][position[0] - 1].getMonster() != null || board[position[1] + 1][position[0] + 1].getMonster() != null) {
-            System.out.println("condi 4");
-            value = false;
-        }*/
+        if (position[1] != 7) {
+            for (int i = -1; i <= 1; i++) {
+                if (position[0] + i < 0 || position[0] + i >= 8) {
+                    continue;
+                }
+                if (board[position[1] + 1][position[0] + i].getMonster() != null) {
+                    value = false;
+                    break;
+                }
+            }
+        }
 
         System.out.println("General Restrictioin = "+value);
 
         return value;
-        // TODO: 20-11-2022 add other general res
     }
 }

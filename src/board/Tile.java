@@ -54,6 +54,8 @@ public class Tile {
 
         if (monster != null) {
             s += "M";
+        } else {
+            s += " ";
         }
         return s;
     }
