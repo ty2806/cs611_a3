@@ -95,8 +95,7 @@ public class RunGame {
         ItemGenerator itemGenerator = new ItemGenerator(WEAPON_FILE, ARMOR_FILE, POTION_FILE, SPELL_FILE);
         MonsterGenerator monsterGenerator = new MonsterGenerator(DRAGON_FILE, EXOSKELETONS_FILE, SPIRITS_FILE);
         MonsterTeam monsters = new MonsterTeam();
-        System.exit(0);
-        //BoardSession boardSession = new BoardSession(itemGenerator, monsterGenerator, parser, map, heroes, monsters, loc);
-        //boardSession.runBoard();
+        BoardSession boardSession = new BoardSession(itemGenerator, monsterGenerator, parser, map, heroes, monsters, loc);
+        boardSession.runBoard();
     }
 }

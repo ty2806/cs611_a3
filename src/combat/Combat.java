@@ -4,6 +4,7 @@
 
 package combat;
 
+import board.LegendsOfValorBoard;
 import character.*;
 import inventory.*;
 import main.BoardSession;
@@ -56,7 +57,7 @@ public class Combat {
         return true;
     }
 
-    public void monsterAttack(Monster monster, Hero hero)
+    public void monsterAttack(Monster monster, Hero hero, LegendsOfValorBoard board)
     {
         double defense = CombatPolicy.defense(hero.getEquipment().getArmorSlot().getDefense());
         double damage = monster.getDamage();
@@ -68,7 +69,7 @@ public class Combat {
             System.out.println(hero.getName() + " received " + attackResult + " damage. " + hero.getName() + " has " + hero.getHp() + " hp left.");
             if (hero.getHp() == 0) {
                 hero.setFainted(true);
-                BoardSession.removeHeroFromBoard(hero.getLocation());
+                BoardSession.removeHeroFromBoard(hero.getLocation(), board);
                 System.out.println(hero.getName() + " is knocked out by " + monster.getName());
             }
         }

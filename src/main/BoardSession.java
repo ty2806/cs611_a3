@@ -5,7 +5,9 @@
 
 package main;
 
-import board.Board;
+import board.LOVHeroNexus;
+import board.LOVMonsterNexus;
+import board.LegendsOfValorBoard;
 import board.InitialLocations;
 import character.*;
 import combat.Combat;
@@ -19,14 +21,14 @@ public class BoardSession {
     private ItemGenerator itemGenerator;
     private MonsterGenerator monsterGenerator;
     private InputParser parser;
-    private Board map;
+    private LegendsOfValorBoard map;
     private HeroTeam heroes;
     private MonsterTeam monsters;
     private InitialLocations loc;
     private int roundNum;
     private final int respawnRound = 8;
 
-    public BoardSession(ItemGenerator itemGenerator, MonsterGenerator monsterGenerator, InputParser parser, Board map, HeroTeam heroes, MonsterTeam monsters, InitialLocations loc) {
+    public BoardSession(ItemGenerator itemGenerator, MonsterGenerator monsterGenerator, InputParser parser, LegendsOfValorBoard map, HeroTeam heroes, MonsterTeam monsters, InitialLocations loc) {
         this.itemGenerator = itemGenerator;
         this.monsterGenerator = monsterGenerator;
         this.parser = parser;
@@ -51,8 +53,8 @@ public class BoardSession {
             respawnHeroes();
             heroesTurn(infoSession, marketSession, inventorySession, combat);
 
-
             combat.roundEndRecovery(heroes);
+            monstersTurn(combat);
             roundNum ++;
         }
     }
@@ -77,7 +79,7 @@ public class BoardSession {
                         marketSession.runMarket(parser, heroes, map);
                         break;
                     case "b":
-                        boolean successUse = inventorySession.openInventory(parser, hero, heroes, monsters, enemyInRange, combat);
+                        boolean successUse = inventorySession.openInventory(parser, hero, heroes, monsters, enemyInRange, combat, map);
                         if (successUse) {
                             break chooseActionLoop;
                         }
@@ -88,7 +90,7 @@ public class BoardSession {
                     default:
                         boolean validMove = moveHero(command, hero);
                         if (validMove) {
-
+                            checkHeroWin(hero);
                             break chooseActionLoop;
                         }
                         break;
@@ -119,7 +121,7 @@ public class BoardSession {
 
     public String mapControl(int[] location, boolean hasEnemy)
     {
-        map.printBoard();
+        System.out.println(map);
         int x = location[0];
         int y = location[1];
 
@@ -136,13 +138,11 @@ public class BoardSession {
             System.out.print("K/k:attack enemy");
         }
         if (map.isMarket(x, y)) {
-            System.out.println("W/w:move up|A/a:move left|S/s:move down|D/d:move right|Q/q:quit game|I/i:show information|B/b: open bags|M/m:enter market");
+            System.out.print("M/m:enter market");
         }
-        else {
-            System.out.println("W/w:move up|A/a:move left|S/s:move down|D/d:move right|Q/q:quit game|I/i:show information|B/b: open bags");
-        }
+        System.out.println("W/w:move up|A/a:move left|S/s:move down|D/d:move right|T/t:teleport|R/r:recall|Q/q:quit game|I/i:show information|B/b: open bags");
 
-        String[] allowedWords = {"Q", "q", "W", "w", "A", "a", "S", "s", "D", "d", "I", "i", "B", "b", "M", "m", "K", "k"};
+        String[] allowedWords = {"Q", "q", "W", "w", "A", "a", "S", "s", "D", "d", "T", "t", "R", "r", "I", "i", "B", "b", "M", "m", "K", "k"};
         parser.parseInputToString(allowedWords);
         return parser.getParsedString().toLowerCase();
     }
@@ -154,7 +154,7 @@ public class BoardSession {
         Monster monster = monsters.getMember(index);
         combat.heroAttack(hero, monster);
         if (monster.getHp() <= 0) {
-            removeMonster(index, monsters);
+            removeMonster(index, monsters, map);
             System.out.println(monster.getName() + " is slayed by " + hero.getName());
             combat.distributeReward(hero, monster);
         }
@@ -162,30 +162,64 @@ public class BoardSession {
 
     public boolean moveHero(String command, Hero hero)
     {
-        int newX = hero.getLocation()[0];
-        int newY = hero.getLocation()[1];
+        int[] dest = new int[]{hero.getLocation()[0], hero.getLocation()[1]};
+        String moveType = "Regular";
         switch (command) {
             case "w":
-                newY -= 1;
+                dest[1] -= 1;
                 break;
             case "s":
-                newY += 1;
+                dest[1] += 1;
                 break;
             case "a":
-                newX -= 1;
+                dest[0] -= 1;
                 break;
             case "d":
-                newX += 1;
+                dest[0] += 1;
+                break;
+            case "t":
+                dest = inputTeleport();
+                moveType = "Teleport";
+                break;
+            case "r":
+                dest = getHeroBirthplace(hero);
+                moveType = "Recall";
                 break;
         }
-        if (map.isValidPosition(newX, newY)) {
-            map.move(hero.getLocation()[0], hero.getLocation()[1], newX, newY);
-            hero.setLocation(new int[]{newX, newY});
+
+        boolean moveResult = map.makeMoveHero(hero.getLocation(), dest, moveType);
+        if (moveResult) {
+            hero.setLocation(dest);
             return true;
         }
         else {
             System.out.println("This is not a valid move. The destination is unreachable. Please try another direction.");
             return false;
+        }
+    }
+
+    public int[] inputTeleport()
+    {
+        int[] location = new int[2];
+        System.out.println("Please enter the row and column you wish to teleport.");
+        parser.parseInputToInt(0, 7);
+        location[1] = parser.getParsedInt();
+
+        parser.parseInputToInt(0, 7);
+        location[0] = parser.getParsedInt();
+        return location;
+    }
+
+    public int[] getHeroBirthplace(Hero hero)
+    {
+        int lane = hero.getLane();
+        switch (lane) {
+            case 0:
+                return loc.getLane1HeroBirthplace();
+            case 1:
+                return loc.getLane2HeroBirthplace();
+            default:
+                return loc.getLane3HeroBirthplace();
         }
     }
 
@@ -197,10 +231,12 @@ public class BoardSession {
 
             if (enemyInRange.size() > 0) {
                 Hero hero = heroes.getMember(enemyInRange.get(0));
-                combat.monsterAttack(monster, hero);
+                combat.monsterAttack(monster, hero, map);
             }
             else {
-                // TODO: 11/14/2022 add monster advance function
+                int[] dest = new int[]{monster.getLocation()[0], monster.getLocation()[1]+1};
+                map.makeMoveMonster(monster.getLocation(), dest);
+                checkMonsterWin(monster);
             }
         }
     }
@@ -212,18 +248,8 @@ public class BoardSession {
             Hero hero = heroes.getMember(i);
             if (hero.isFainted()) {
                 hero.revive();
-                switch (i) {
-                    case 0:
-                        hero.setLocation(loc.getLane1HeroBirthplace());
-                        break;
-                    case 1:
-                        hero.setLocation(loc.getLane2HeroBirthplace());
-                        break;
-                    case 2:
-                        hero.setLocation(loc.getLane3HeroBirthplace());
-                        break;
-                }
-                //TODO: 11/14/2022 add hero to map
+                hero.setLocation(getHeroBirthplace(hero));
+                map.getCell(getHeroBirthplace(hero)[1], getHeroBirthplace(hero)[0]).setHero(hero);
             }
         }
     }
@@ -231,26 +257,44 @@ public class BoardSession {
     public void respawnMonsters()
     {
         for (int i = 0; i < 3; i ++) {
-            // TODO: 11/13/2022 add a condition check if the birthplace is already occupied
+            int[] birthplace;
+            switch (i) {
+                case 0:
+                    birthplace = loc.getLane1MonsterBirthplace();
+                    break;
+                case 1:
+                    birthplace = loc.getLane2MonsterBirthplace();
+                    break;
+                default:
+                    birthplace = loc.getLane3MonsterBirthplace();
+                    break;
+            }
+            if (map.getCell(birthplace[1], birthplace[0]).getMonster() != null) {
+                continue;
+            }
 
             Monster monster = monsterGenerator.randomGenerate();
             monster.setLevel(CombatPolicy.levelMatch(heroes, i, "same"));
             monster.setAttributes();
-
-            switch (i) {
-                case 0:
-                    monster.setLocation(loc.getLane1MonsterBirthplace());
-                    break;
-                case 1:
-                    monster.setLocation(loc.getLane2MonsterBirthplace());
-                    break;
-                case 2:
-                    monster.setLocation(loc.getLane3MonsterBirthplace());
-                    break;
-            }
-
+            monster.setLocation(birthplace);
             monsters.addMember(monster);
-            // TODO: 11/13/2022 add monster to map
+            map.getCell(birthplace[1], birthplace[0]).setMonster(monster);
+        }
+    }
+
+    public void checkHeroWin(Hero hero)
+    {
+        if (map.getCell(hero.getLocation()[1], hero.getLocation()[0]).getTerrain() instanceof LOVMonsterNexus) {
+            System.out.println("Heroes has won!");
+            exitGame();
+        }
+    }
+
+    public void checkMonsterWin(Monster monster)
+    {
+        if (map.getCell(monster.getLocation()[1], monster.getLocation()[0]).getTerrain() instanceof LOVHeroNexus) {
+            System.out.println("Monsters has won!");
+            exitGame();
         }
     }
 
@@ -273,19 +317,19 @@ public class BoardSession {
         return parser.getParsedInt();
     }
 
-    public static void removeMonster(int index, MonsterTeam monsters)
+    public static void removeMonster(int index, MonsterTeam monsters, LegendsOfValorBoard board)
     {
-        removeMonsterFromBoard(monsters.getMember(index).getLocation());
+        removeMonsterFromBoard(monsters.getMember(index).getLocation(), board);
         monsters.removeMember(index);
     }
 
-    public static void removeMonsterFromBoard(int[] location)
+    public static void removeMonsterFromBoard(int[] location, LegendsOfValorBoard board)
     {
-        // TODO: 11/14/2022 implement the method removing a monster from a tile
+        board.getCell(location[1], location[0]).setMonster(null);
     }
 
-    public static void removeHeroFromBoard(int[] location)
+    public static void removeHeroFromBoard(int[] location, LegendsOfValorBoard board)
     {
-        // TODO: 11/14/2022 implement the method removing a hero from a tile
+        board.getCell(location[1], location[0]).setHero(null);
     }
 }

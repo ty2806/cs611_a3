@@ -4,6 +4,7 @@
 
 package main;
 
+import board.LegendsOfValorBoard;
 import character.Hero;
 import character.HeroTeam;
 import character.Monster;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 
 public class InventorySession {
 
-    public boolean openInventory(InputParser parser, Hero hero, HeroTeam heroes, MonsterTeam monsters, ArrayList<Integer> enemyInRange, Combat combat)
+    public boolean openInventory(InputParser parser, Hero hero, HeroTeam heroes, MonsterTeam monsters, ArrayList<Integer> enemyInRange, Combat combat, LegendsOfValorBoard board)
     {
         while (true) {
             int index = chooseItem(parser, hero);
@@ -30,7 +31,7 @@ public class InventorySession {
             boolean successUse;
             if (item instanceof Spell) {
                 if (enemyInRange.size() > 0) {
-                    successUse = castSpell(parser, hero, index, enemyInRange, monsters, combat);
+                    successUse = castSpell(parser, hero, index, enemyInRange, monsters, combat, board);
                 }
                 else {
                     System.out.println("A spell cannot be used under safe circumstance. Choose another item instead.");
@@ -87,7 +88,7 @@ public class InventorySession {
         }
     }
 
-    public boolean castSpell(InputParser parser, Hero hero, int index, ArrayList<Integer> enemyInRange, MonsterTeam monsters, Combat combat)
+    public boolean castSpell(InputParser parser, Hero hero, int index, ArrayList<Integer> enemyInRange, MonsterTeam monsters, Combat combat, LegendsOfValorBoard board)
     {
         int monsterIndex = BoardSession.chooseEnemy(parser, enemyInRange, monsters);
 
@@ -102,7 +103,7 @@ public class InventorySession {
         }
 
         if (monster.getHp() <= 0) {
-            BoardSession.removeMonster(monsterIndex, monsters);
+            BoardSession.removeMonster(monsterIndex, monsters, board);
             System.out.println(monster.getName() + " is slayed by " + hero.getName());
             combat.distributeReward(hero, monster);
         }

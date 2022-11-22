@@ -4,7 +4,7 @@
 
 package main;
 
-import board.Board;
+import board.LegendsOfValorBoard;
 import character.Hero;
 import character.HeroTeam;
 import inventory.ItemGenerator;
@@ -22,7 +22,7 @@ public class MarketSession {
         this.rand = new Random();
     }
 
-    public void runMarket(InputParser parser, HeroTeam heroes, Board map)
+    public void runMarket(InputParser parser, HeroTeam heroes, LegendsOfValorBoard map)
     {
         Market market = new Market(itemGenerator, rand.nextInt(10)+10);
         market.printMarket();
@@ -32,7 +32,7 @@ public class MarketSession {
         }
     }
 
-    public void trade(InputParser parser, Hero customer, Market market, Board map)
+    public void trade(InputParser parser, Hero customer, Market market, LegendsOfValorBoard map)
     {
         while (true) {
             System.out.println("customer: " + customer.getName() + " level:"+customer.getLevel() + " gold:"+customer.getGold());
@@ -50,7 +50,7 @@ public class MarketSession {
                     buyFromMarket(parser, customer, market);
                     break;
                 case "m":
-                    map.printBoard();
+                    System.out.println(map);
                     break;
             }
         }

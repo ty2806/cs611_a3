@@ -6,8 +6,8 @@
 package character;
 
 public class Sorcerer extends Hero{
-    public Sorcerer(String name, int hp, int level, int mp, int strength, int dexterity, int agility, int gold, int exp) {
-        super(name, hp, level, mp, strength, dexterity, agility, gold, exp);
+    public Sorcerer(String name, int hp, int level, int mp, int strength, int dexterity, int agility, int gold, int exp, int lane) {
+        super(name, hp, level, mp, strength, dexterity, agility, gold, exp, lane);
     }
 
     @Override

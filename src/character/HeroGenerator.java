@@ -36,7 +36,7 @@ public class HeroGenerator {
         return paladinList;
     }
 
-    public Hero generateHero(int index, String heroType)
+    public Hero generateHero(int index, String heroType, int lane)
     {
         ArrayList<String> attrList;
         if (heroType.equals("warrior")) {
@@ -58,13 +58,13 @@ public class HeroGenerator {
         int exp = Integer.parseInt(attrList.get(6));
 
         if (heroType.equals("warrior")) {
-            return new Warrior(name, LevelUpPolicy.updateHealth(1), 1, mana, strength, dexterity, agility, money, exp);
+            return new Warrior(name, LevelUpPolicy.updateHealth(1), 1, mana, strength, dexterity, agility, money, exp, lane);
         }
         else if (heroType.equals("sorcerer")) {
-            return new Sorcerer(name, LevelUpPolicy.updateHealth(1), 1, mana, strength, dexterity, agility, money, exp);
+            return new Sorcerer(name, LevelUpPolicy.updateHealth(1), 1, mana, strength, dexterity, agility, money, exp, lane);
         }
         else {
-            return new Paladin(name, LevelUpPolicy.updateHealth(1), 1, mana, strength, dexterity, agility, money, exp);
+            return new Paladin(name, LevelUpPolicy.updateHealth(1), 1, mana, strength, dexterity, agility, money, exp, lane);
         }
     }
 
