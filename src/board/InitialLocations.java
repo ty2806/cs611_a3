@@ -3,7 +3,7 @@
  */
 
 package board;
-
+//class to store initial birth locations of all heroes
 public class InitialLocations {
     private int[] lane1HeroBirthplace;
     private int[] lane2HeroBirthplace;
