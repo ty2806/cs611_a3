@@ -16,7 +16,6 @@ public class LegendsOfValorBoard {
     public static final String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
     public static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
     public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
-    private final int default_size = 8;
 
     private Tile[][] board;
     private int height;
@@ -49,6 +48,7 @@ public class LegendsOfValorBoard {
         board[loc[1]][loc[0]].setHero(hero);
     }
 
+    //method to increase and reset hero attributes
     public void buffHero(Hero hero) {
 
         hero.setStrength(hero.getOriginalStrength());
@@ -75,6 +75,7 @@ public class LegendsOfValorBoard {
         }
     }
 
+    //method for moving hero
     public boolean makeMoveHero(int[] origin, int[] destination, String moveType) {
         boolean specialRestriction = false;
         switch (moveType) {
@@ -96,12 +97,13 @@ public class LegendsOfValorBoard {
         return moveResult;
     }
 
-
+    //method for moving monster
     public void makeMoveMonster(int[] origin, int[] destination) {
         Move move = new Move();
         move.monsterMove(origin, destination, board);
     }
 
+    //method to check range of attack
     public boolean isInAttackRange(int[] a, int[] b) {
         return Math.abs(b[0] - a[0]) <= 1 && Math.abs(b[1] - a[1]) <= 1;
     }
@@ -110,10 +112,10 @@ public class LegendsOfValorBoard {
         return board[y][x].getTerrain().MarketPolicy();
     }
 
+    //printing board
     public String toString() {
         String gameBoard = "";
         for (int i = 0; i < board.length; i++) {
-            //for (int k = 0; k < 3; k++) {
             for (int j = 0; j < board[i].length; j++) {
                 Tile lovcell = board[i][j];
                 if (!(lovcell == null)) {
@@ -134,14 +136,13 @@ public class LegendsOfValorBoard {
                     gameBoard += lovcell.toString() + "" + ANSI_RESET;
                 } else
                     gameBoard += " ";
-
             }
             gameBoard += '\n';
-            //}
         }
         return gameBoard;
     }
 
+    //initialising the board
     public void initBoard() {
         Random random = new Random();
         //Tile[][] board = new Tile[default_size][default_size];

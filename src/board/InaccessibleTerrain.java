@@ -2,26 +2,25 @@
  *  It doesn't allow player to get on.
  */
 
+//class extends terrain and declares inaccessible terrains
 package board;
 
-public class InaccessibleTerrain extends Terrain{
-    public InaccessibleTerrain() {}
+public class InaccessibleTerrain extends Terrain {
+    public InaccessibleTerrain() {
+    }
 
     @Override
-    public boolean accessPolicy()
-    {
+    public boolean accessPolicy() {
         return false;
     }
 
     @Override
-    public boolean encounterEnemyPolicy()
-    {
+    public boolean encounterEnemyPolicy() {
         return false;
     }
 
     @Override
-    public boolean MarketPolicy()
-    {
+    public boolean MarketPolicy() {
         return false;
     }
 
@@ -30,8 +29,7 @@ public class InaccessibleTerrain extends Terrain{
         return null;
     }
 
-    public String toString()
-    {
+    public String toString() {
         return "X";
     }
 }

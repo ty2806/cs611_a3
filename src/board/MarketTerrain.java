@@ -4,8 +4,9 @@
 
 package board;
 
-public class MarketTerrain extends Terrain{
-    public MarketTerrain() {}
+public class MarketTerrain extends Terrain {
+    public MarketTerrain() {
+    }
 
     @Override
     public boolean accessPolicy() {
@@ -26,9 +27,9 @@ public class MarketTerrain extends Terrain{
     public String IncreaseAbility() {
         return null;
     }
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "M";
     }
 }

@@ -3,7 +3,7 @@ package board;
 import character.Hero;
 
 public class LOVCaveCell extends Terrain {
-    // the class represent cave cells which extend LOVCell
+    // the class represent cave cells which extend Terrain
 
     public LOVCaveCell() {
     }
@@ -29,7 +29,7 @@ public class LOVCaveCell extends Terrain {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "C";
     }
 }

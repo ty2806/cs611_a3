@@ -1,7 +1,7 @@
 package board;
 
 public class LOVInaccesibleCell extends Terrain {
-    // the class represent Inaccesible cells which extend LOVCell
+    // the class represent Inaccesible cells which extend Terrain
     public LOVInaccesibleCell() {
     }
 
@@ -24,8 +24,9 @@ public class LOVInaccesibleCell extends Terrain {
     public String IncreaseAbility() {
         return "";
     }
+
     @Override
-    public String toString(){
+    public String toString() {
         return "X";
     }
 }

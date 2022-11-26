@@ -4,7 +4,7 @@ import character.Hero;
 
 public class LOVKoulouCell extends Terrain {
 
-    // the class represent Koulou cells which extend LOVCell
+    // the class represent Koulou cells which extend Terrain
     public LOVKoulouCell() {
     }
 
@@ -27,12 +27,9 @@ public class LOVKoulouCell extends Terrain {
     public String IncreaseAbility() {
         return "Strength";
     }
+
     @Override
     public String toString() {
         return "K";
-    }
-
-    public void doBoostBehavior(Hero hero) {
-        hero.setStrength((int) (hero.getStrength() * 1.1));
     }
 }

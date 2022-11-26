@@ -3,7 +3,7 @@ package board;
 import character.Hero;
 
 public class LOVBushCell extends Terrain {
-    // the class represent bush cells which extend LOVCell
+    // the class represent bush cells which extend Terrain
     public LOVBushCell() {
     }
 

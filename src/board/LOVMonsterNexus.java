@@ -1,8 +1,9 @@
 package board;
 
 public class LOVMonsterNexus extends Terrain {
-    // the class represent Monster Nexus cells which extend LOVCell
-    public LOVMonsterNexus() {}
+    // the class represent Monster Nexus cells which extend Terrain
+    public LOVMonsterNexus() {
+    }
 
     @Override
     public boolean accessPolicy() {
@@ -23,9 +24,9 @@ public class LOVMonsterNexus extends Terrain {
     public String IncreaseAbility() {
         return "";
     }
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "V";
     }
 }

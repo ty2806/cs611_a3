@@ -3,7 +3,7 @@ package board;
 import character.Hero;
 
 public class LOVPlainsCell extends Terrain {
-    // the class represent plain cells which extend LOVCell
+    // the class represent plain cells which extend Terrain
     public LOVPlainsCell() {
     }
 
@@ -26,8 +26,9 @@ public class LOVPlainsCell extends Terrain {
     public String IncreaseAbility() {
         return "";
     }
+
     @Override
-    public String toString(){
+    public String toString() {
         return " ";
     }
 }

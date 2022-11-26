@@ -1,7 +1,7 @@
 package board;
 
 public class LOVHeroNexus extends Terrain {
-
+    //class to initialise hero nexus and extends Terrain
     public LOVHeroNexus() {
     }
 
@@ -24,8 +24,9 @@ public class LOVHeroNexus extends Terrain {
     public String IncreaseAbility() {
         return "";
     }
+
     @Override
-    public String toString(){
+    public String toString() {
         return "H";
     }
 }
