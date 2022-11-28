@@ -1,3 +1,7 @@
+## Names
+----------------------------------------------------
+Tian Ye U18899591
+Toshniwal Dhruv	U28189255
 
 ## Files
 ---------------------------------------------------------------------------
@@ -8,6 +12,21 @@ Terrain: An abstract terrain class. It has 3 subclasses: CommonTerrain, Inaccess
 CommonTerrain: It has a method allowing a probability of 30% to encounter monsters.
 InaccessibleTerrain: It doesn't allow player to get on.
 MarketTerrain: Player is allowed to enter a market on this terrain.
+InitialLocations: Class stores birth locations of the heroes for recall and rebirth access
+LegendsOfValorBoard: It contains the map of the Legends of Valor and all methods related to move, print and initialise board
+LOVBushCell: Represents a Bush cell on the map
+LOVCaveCell: Represents a Cave cell on the map
+LOVHeroNexus: Represents a Hero Nexus cell on the map
+LOVInaccessibleCell: Represents all inaccessible cells on the map
+LOVKoulouCell: Represents a Koulou cell on the map
+LOVMonsterNexus: Represents a Monster Nexus cell on the map
+LOVPlainsCell: Represents all walkable tiles with no buff
+Move: Class to move the hero and monster and check restriction
+Recall: Class to provide specific restriction to special move recall
+RegularMove: Class to provide specific restriction of regular move
+specificMove: interface for all move types
+Teleport: Class to provide specific restriction of teleport type move
+
 
 character package: It contains all heros and monsters classes.
 Hero: An abstract hero class. It contains all methods necessary for all heroes.
@@ -62,15 +81,20 @@ java main.Main
 
 ## Input/Output Example
 ---------------------------------------------------------------------------
+
+
 Welcome to console game Monsters and Heros!
-Please specify map size. The minimum size is 3 and the maximum size is 30.
-8
-Please specify the percentage of inaccessible terrain in this map. The allowed range is 0 to 50.
-20
-Please specify the percentage of market terrain in this map. The allowed range is 0 to 80.
-30
-Please specify number of heroes. The minimum number is 1 and the maximum number is 3.
-3
+Printing map
+
+V   V   X   V   V   X   V   V   
+B       X   C   C   X   B   K   
+C       X   K   B   X   B   B   
+        X       B   X   C       
+B       X           X   K   K   
+    C   X   C   C   X       C   
+K       X       B   X           
+H   H   X   H   H   X   H   H   
+
 No.   Name   HP   MP   strength   agility   dexterity   starting money   starting experience
 Warriors
 0 [Gaerdal_Ironhand, 100, 100, 700, 500, 600, 1354, 7]
@@ -93,161 +117,213 @@ Paladins
 15 [Garl_Glittergold, 100, 100, 600, 500, 400, 2500, 5]
 16 [Amaryllis_Astra, 100, 500, 500, 500, 500, 2500, 5]
 17 [Caliber_Heist, 100, 400, 400, 400, 400, 2500, 8]
-Please choose a hero to join your team. Pick a hero by enter the number before each hero's name.
-2
-Muamman_Duathall joined your team.
-Please choose a hero to join your team. Pick a hero by enter the number before each hero's name.
-9
-Reverie_Ashels joined your team.
-Please choose a hero to join your team. Pick a hero by enter the number before each hero's name.
-12
-Parzival joined your team.
-[[Desghidorrah, 3, 300, 400, 35], [Chrysophylax, 2, 200, 500, 20], [BunsenBurner, 4, 400, 500, 45], [Natsunomeryu, 1, 100, 200, 10], [TheScaleless      , 7, 700, 600, 75], [Kas-Ethelinh, 5, 600, 500, 60], [Alexstraszan     , 10, 1000, 9000, 55], [Phaarthurnax, 6, 600, 700, 60], [D-Maleficent, 9, 900, 950, 85], [TheWeatherbe, 8, 800, 900, 80], [Igneel, 6, 600, 400, 60], [BlueEyesWhite, 9, 900, 600, 75]]
-[[Cyrrollalee, 7, 700, 800, 75], [Brandobaris, 3, 350, 450, 30], [BigBad-Wolf, 1, 150, 250, 15], [WickedWitch, 2, 250, 350, 25], [Aasterinian, 4, 400, 500, 45], [Chronepsish, 6, 650, 750, 60], [Kiaransalee, 8, 850, 950, 85], [St-Shargaas, 5, 550, 650, 55], [Merrshaullk, 10, 1000, 900, 55], [St-Yeenoghu, 9, 950, 850, 90], [DocOck, 6, 600, 600, 55], [Exodia, 10, 1000, 1000, 50]]
-[[Andrealphus, 2, 600, 500, 40], [Blinky, 1, 450, 350, 35], [Andromalius, 3, 550, 450, 25], [Chiang-shih, 4, 700, 600, 40], [FallenAngel, 5, 800, 700, 50], [Ereshkigall, 6, 950, 450, 35], [Melchiresas, 7, 350, 150, 75], [Jormunngand, 8, 600, 900, 20], [Rakkshasass, 9, 550, 600, 35], [Taltecuhtli, 10, 300, 200, 50], [Casper, 1, 100, 100, 50]]
-+---+---+---+---+---+---+---+---+
-|   | $ |   |   | X |   | $ | $ |
-+---+---+---+---+---+---+---+---+
-| $ |   | $ | $ | $ |   | $ |   |
-+---+---+---+---+---+---+---+---+
-| X |   |   | X |   | $ | X |   |
-+---+---+---+---+---+---+---+---+
-| X |   |   |   | X |   |   | X |
-+---+---+---+---+---+---+---+---+
-| $ |   | $ |   | X | P | X |   |
-+---+---+---+---+---+---+---+---+
-| $ | $ |   | X | X | $ | $ | X |
-+---+---+---+---+---+---+---+---+
-|   | $ |   |   |   |   |   |   |
-+---+---+---+---+---+---+---+---+
-| $ | $ | $ |   |   | X | $ |   |
-+---+---+---+---+---+---+---+---+
-X = inaccessible, $ = market, P = heroes
-You can control your team by following commands
-W/w:move up|A/a:move left|S/s:move down|D/d:move right|Q/q:quit game|I/i:show information|B/b: open bags
-s
-+---+---+---+---+---+---+---+---+
-|   | $ |   |   | X |   | $ | $ |
-+---+---+---+---+---+---+---+---+
-| $ |   | $ | $ | $ |   | $ |   |
-+---+---+---+---+---+---+---+---+
-| X |   |   | X |   | $ | X |   |
-+---+---+---+---+---+---+---+---+
-| X |   |   |   | X |   |   | X |
-+---+---+---+---+---+---+---+---+
-| $ |   | $ |   | X |   | X |   |
-+---+---+---+---+---+---+---+---+
-| $ | $ |   | X | X | P | $ | X |
-+---+---+---+---+---+---+---+---+
-|   | $ |   |   |   |   |   |   |
-+---+---+---+---+---+---+---+---+
-| $ | $ | $ |   |   | X | $ |   |
-+---+---+---+---+---+---+---+---+
-X = inaccessible, $ = market, P = heroes
-You are near a Market! You can input M/m to enter this market
-You can control your team by following commands
-W/w:move up|A/a:move left|S/s:move down|D/d:move right|Q/q:quit game|I/i:show information|B/b: open bags|M/m:enter market
-m
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-0 PotionName:Mermaid_Tears Price:850 Level:5 Effect:100 Attributes:Health/Mana/Strength/Agility
-1 PotionName:Ambrosia Price:200 Level:1 Effect:150 Attributes:revive
-2 SpellName:Snow_Cannon Price:500 Level:2 Damage:650 Mana cost:250 Type:ice Quantity:8
-3 ArmorName:Guardian_Angel Price:1000 Level:10 Defense:1000
-4 SpellName:Ice_Blade Price:250 Level:1 Damage:450 Mana cost:100 Type:ice Quantity:10
-5 SpellName:Hell_Storm Price:600 Level:3 Damage:950 Mana cost:600 Type:fire Quantity:8
-6 SpellName:Arctic_Storm Price:700 Level:6 Damage:800 Mana cost:300 Type:ice Quantity:6
-7 SpellName:Frost_Blizzard Price:750 Level:5 Damage:850 Mana cost:350 Type:ice Quantity:6
-8 ArmorName:Wizard_Shield Price:1200 Level:10 Defense:1500
-9 Weapon Name:TSwords Price:1400 Level:8 Damage:1600 Hand:2
-10 SpellName:Frost_Blizzard Price:750 Level:5 Damage:850 Mana cost:350 Type:ice Quantity:6
-11 SpellName:Electric_Arrows Price:550 Level:5 Damage:650 Mana cost:200 Type:lightning Quantity:6
-12 PotionName:Magic_Potion Price:350 Level:2 Effect:100 Attributes:Mana
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-customer: Muamman_Duathall level:1 gold:2546
-S/s:sell items in your inventory to market|B/b:buy items from market|Q/q:leave market|M/m: display map
-b
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-0 PotionName:Mermaid_Tears Price:850 Level:5 Effect:100 Attributes:Health/Mana/Strength/Agility
-1 PotionName:Ambrosia Price:200 Level:1 Effect:150 Attributes:revive
-2 SpellName:Snow_Cannon Price:500 Level:2 Damage:650 Mana cost:250 Type:ice Quantity:8
-3 ArmorName:Guardian_Angel Price:1000 Level:10 Defense:1000
-4 SpellName:Ice_Blade Price:250 Level:1 Damage:450 Mana cost:100 Type:ice Quantity:10
-5 SpellName:Hell_Storm Price:600 Level:3 Damage:950 Mana cost:600 Type:fire Quantity:8
-6 SpellName:Arctic_Storm Price:700 Level:6 Damage:800 Mana cost:300 Type:ice Quantity:6
-7 SpellName:Frost_Blizzard Price:750 Level:5 Damage:850 Mana cost:350 Type:ice Quantity:6
-8 ArmorName:Wizard_Shield Price:1200 Level:10 Defense:1500
-9 Weapon Name:TSwords Price:1400 Level:8 Damage:1600 Hand:2
-10 SpellName:Frost_Blizzard Price:750 Level:5 Damage:850 Mana cost:350 Type:ice Quantity:6
-11 SpellName:Electric_Arrows Price:550 Level:5 Damage:650 Mana cost:200 Type:lightning Quantity:6
-12 PotionName:Magic_Potion Price:350 Level:2 Effect:100 Attributes:Mana
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-Enter a number before each item to buy or enter q to quit buying
+Please choose a hero to join lane 1. Pick a hero by enter the number before each hero's name.
 1
-Muamman_Duathall purchased Ambrosia(1)
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-0 PotionName:Mermaid_Tears Price:850 Level:5 Effect:100 Attributes:Health/Mana/Strength/Agility
-1 SpellName:Snow_Cannon Price:500 Level:2 Damage:650 Mana cost:250 Type:ice Quantity:8
-2 ArmorName:Guardian_Angel Price:1000 Level:10 Defense:1000
-3 SpellName:Ice_Blade Price:250 Level:1 Damage:450 Mana cost:100 Type:ice Quantity:10
-4 SpellName:Hell_Storm Price:600 Level:3 Damage:950 Mana cost:600 Type:fire Quantity:8
-5 SpellName:Arctic_Storm Price:700 Level:6 Damage:800 Mana cost:300 Type:ice Quantity:6
-6 SpellName:Frost_Blizzard Price:750 Level:5 Damage:850 Mana cost:350 Type:ice Quantity:6
-7 ArmorName:Wizard_Shield Price:1200 Level:10 Defense:1500
-8 Weapon Name:TSwords Price:1400 Level:8 Damage:1600 Hand:2
-9 SpellName:Frost_Blizzard Price:750 Level:5 Damage:850 Mana cost:350 Type:ice Quantity:6
-10 SpellName:Electric_Arrows Price:550 Level:5 Damage:650 Mana cost:200 Type:lightning Quantity:6
-11 PotionName:Magic_Potion Price:350 Level:2 Effect:100 Attributes:Mana
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-Enter a number before each item to buy or enter q to quit buying
-q
-customer: Muamman_Duathall level:1 gold:2346
-S/s:sell items in your inventory to market|B/b:buy items from market|Q/q:leave market|M/m: display map
-q
-customer: Reverie_Ashels level:1 gold:2500
-S/s:sell items in your inventory to market|B/b:buy items from market|Q/q:leave market|M/m: display map
-q
-customer: Parzival level:1 gold:2500
-S/s:sell items in your inventory to market|B/b:buy items from market|Q/q:leave market|M/m: display map
-q
-+---+---+---+---+---+---+---+---+
-|   | $ |   |   | X |   | $ | $ |
-+---+---+---+---+---+---+---+---+
-| $ |   | $ | $ | $ |   | $ |   |
-+---+---+---+---+---+---+---+---+
-| X |   |   | X |   | $ | X |   |
-+---+---+---+---+---+---+---+---+
-| X |   |   |   | X |   |   | X |
-+---+---+---+---+---+---+---+---+
-| $ |   | $ |   | X |   | X |   |
-+---+---+---+---+---+---+---+---+
-| $ | $ |   | X | X | P | $ | X |
-+---+---+---+---+---+---+---+---+
-|   | $ |   |   |   |   |   |   |
-+---+---+---+---+---+---+---+---+
-| $ | $ | $ |   |   | X | $ |   |
-+---+---+---+---+---+---+---+---+
-X = inaccessible, $ = market, P = heroes
+Sehanine_Monnbow joined lane1
+V   V   X   V   V   X   V   V   
+B       X   C   C   X   B   K   
+C       X   K   B   X   B   B   
+        X       B   X   C       
+B       X           X   K   K   
+    C   X   C   C   X       C   
+K       X       B   X           
+HH1 H   X   H   H   X   H   H   
+
+Please choose a hero to join lane 2. Pick a hero by enter the number before each hero's name.
+2
+Muamman_Duathall joined lane2
+V   V   X   V   V   X   V   V   
+B       X   C   C   X   B   K   
+C       X   K   B   X   B   B   
+        X       B   X   C       
+B       X           X   K   K   
+    C   X   C   C   X       C   
+K       X       B   X           
+HH1 H   X   HH2 H   X   H   H   
+
+Please choose a hero to join lane 3. Pick a hero by enter the number before each hero's name.
+3
+Flandal_Steelskin joined lane3
+V   V   X   V   V   X   V   V   
+B       X   C   C   X   B   K   
+C       X   K   B   X   B   B   
+        X       B   X   C       
+B       X           X   K   K   
+    C   X   C   C   X       C   
+K       X       B   X           
+HH1 H   X   HH2 H   X   HH3 H   
+
+Now it is hero Sehanine_Monnbow's turn.
+V  MV   X   V  MV   X   V  MV   
+B       X   C   C   X   B   K   
+C       X   K   B   X   B   B   
+        X       B   X   C       
+B       X           X   K   K   
+    C   X   C   C   X       C   
+K       X       B   X           
+HH1 H   X   HH2 H   X   HH3 H   
+
 You are near a Market! You can input M/m to enter this market
-You can control your team by following commands
-W/w:move up|A/a:move left|S/s:move down|D/d:move right|Q/q:quit game|I/i:show information|B/b: open bags|M/m:enter market
+You can control your hero by following commands
+M/m:enter marketW/w:move up|A/a:move left|S/s:move down|D/d:move right|T/t:teleport|R/r:recall|Q/q:quit game|I/i:show information|B/b: open bags
+w
+hero receives a strength bonus on current terrain.
+Now it is hero Muamman_Duathall's turn.
+V  MV   X   V  MV   X   V  MV   
+B       X   C   C   X   B   K   
+C       X   K   B   X   B   B   
+        X       B   X   C       
+B       X           X   K   K   
+    C   X   C   C   X       C   
+KH1     X       B   X           
+H   H   X   HH2 H   X   HH3 H   
+
+You are near a Market! You can input M/m to enter this market
+You can control your hero by following commands
+M/m:enter marketW/w:move up|A/a:move left|S/s:move down|D/d:move right|T/t:teleport|R/r:recall|Q/q:quit game|I/i:show information|B/b: open bags
+d
+Now it is hero Flandal_Steelskin's turn.
+V  MV   X   V  MV   X   V  MV   
+B       X   C   C   X   B   K   
+C       X   K   B   X   B   B   
+        X       B   X   C       
+B       X           X   K   K   
+    C   X   C   C   X       C   
+KH1     X       B   X           
+H   H   X   H   HH2 X   HH3 H   
+
+You are near a Market! You can input M/m to enter this market
+You can control your hero by following commands
+M/m:enter marketW/w:move up|A/a:move left|S/s:move down|D/d:move right|T/t:teleport|R/r:recall|Q/q:quit game|I/i:show information|B/b: open bags
+a
+Illegal move, please try again!
+This is not a valid move. The destination is unreachable. Please try another direction.
+Now it is hero Flandal_Steelskin's turn.
+V  MV   X   V  MV   X   V  MV   
+B       X   C   C   X   B   K   
+C       X   K   B   X   B   B   
+        X       B   X   C       
+B       X           X   K   K   
+    C   X   C   C   X       C   
+KH1     X       B   X           
+H   H   X   H   HH2 X   HH3 H   
+
+You are near a Market! You can input M/m to enter this market
+You can control your hero by following commands
+M/m:enter marketW/w:move up|A/a:move left|S/s:move down|D/d:move right|T/t:teleport|R/r:recall|Q/q:quit game|I/i:show information|B/b: open bags
+w
+
+
+
+monster move from [0, 0] to [0, 1]
+monster move from [3, 0] to [3, 1]
+monster move from [6, 0] to [6, 1]
+Now it is hero Sehanine_Monnbow's turn.
+V   V   X   V   V   X   V   V   
+B  M    X   C  MC   X   B  MK   
+C       X   K   B   X   B   B   
+        X       B   X   C       
+B       X           X   K   K   
+    C   X   C   C   X       C   
+KH1     X       B   X    H3     
+H   H   X   H   HH2 X   H   H   
+
+You can control your hero by following commands
+W/w:move up|A/a:move left|S/s:move down|D/d:move right|T/t:teleport|R/r:recall|Q/q:quit game|I/i:show information|B/b: open bags
+t
+Please enter the row and column you wish to teleport.
+6
+7
+Now it is hero Muamman_Duathall's turn.
+V   V   X   V   V   X   V   V   
+B  M    X   C  MC   X   B  MK   
+C       X   K   B   X   B   B   
+        X       B   X   C       
+B       X           X   K   K   
+    C   X   C   C   X       C   
+K       X       B   X    H3  H1 
+H   H   X   H   HH2 X   H   H   
+
+You are near a Market! You can input M/m to enter this market
+You can control your hero by following commands
+M/m:enter marketW/w:move up|A/a:move left|S/s:move down|D/d:move right|T/t:teleport|R/r:recall|Q/q:quit game|I/i:show information|B/b: open bags
+w
+hero receives an dexterity bonus on current terrain.
+Now it is hero Flandal_Steelskin's turn.
+V   V   X   V   V   X   V   V   
+B  M    X   C  MC   X   B  MK   
+C       X   K   B   X   B   B   
+        X       B   X   C       
+B       X           X   K   K   
+    C   X   C   C   X       C   
+K       X       BH2 X    H3  H1 
+H   H   X   H   H   X   H   H   
+
+You can control your hero by following commands
+W/w:move up|A/a:move left|S/s:move down|D/d:move right|T/t:teleport|R/r:recall|Q/q:quit game|I/i:show information|B/b: open bags
+w
+
+
+
+monster move from [0, 1] to [0, 2]
+monster move from [3, 1] to [3, 2]
+monster move from [6, 1] to [6, 2]
+Now it is hero Sehanine_Monnbow's turn.
+V   V   X   V   V   X   V   V   
+B       X   C   C   X   B   K   
+C  M    X   K  MB   X   B  MB   
+        X       B   X   C       
+B       X           X   K   K   
+    C   X   C   C   X    H3 C   
+K       X       BH2 X        H1 
+H   H   X   H   H   X   H   H   
+
+You can control your hero by following commands
+W/w:move up|A/a:move left|S/s:move down|D/d:move right|T/t:teleport|R/r:recall|Q/q:quit game|I/i:show information|B/b: open bags
+r
+Now it is hero Muamman_Duathall's turn.
+V   V   X   V   V   X   V   V   
+B       X   C   C   X   B   K   
+C  M    X   K  MB   X   B  MB   
+        X       B   X   C       
+B       X           X   K   K   
+    C   X   C   C   X    H3 C   
+K       X       BH2 X           
+HH1 H   X   H   H   X   H   H   
+
+You can control your hero by following commands
+W/w:move up|A/a:move left|S/s:move down|D/d:move right|T/t:teleport|R/r:recall|Q/q:quit game|I/i:show information|B/b: open bags
+a
+Now it is hero Flandal_Steelskin's turn.
+V   V   X   V   V   X   V   V   
+B       X   C   C   X   B   K   
+C  M    X   K  MB   X   B  MB   
+        X       B   X   C       
+B       X           X   K   K   
+    C   X   C   C   X    H3 C   
+K       X    H2 B   X           
+HH1 H   X   H   H   X   H   H   
+
+You can control your hero by following commands
+W/w:move up|A/a:move left|S/s:move down|D/d:move right|T/t:teleport|R/r:recall|Q/q:quit game|I/i:show information|B/b: open bags
 s
-+---+---+---+---+---+---+---+---+
-|   | $ |   |   | X |   | $ | $ |
-+---+---+---+---+---+---+---+---+
-| $ |   | $ | $ | $ |   | $ |   |
-+---+---+---+---+---+---+---+---+
-| X |   |   | X |   | $ | X |   |
-+---+---+---+---+---+---+---+---+
-| X |   |   |   | X |   |   | X |
-+---+---+---+---+---+---+---+---+
-| $ |   | $ |   | X |   | X |   |
-+---+---+---+---+---+---+---+---+
-| $ | $ |   | X | X | $ | $ | X |
-+---+---+---+---+---+---+---+---+
-|   | $ |   |   |   | P |   |   |
-+---+---+---+---+---+---+---+---+
-| $ | $ | $ |   |   | X | $ |   |
-+---+---+---+---+---+---+---+---+
-X = inaccessible, $ = market, P = heroes
-You can control your team by following commands
-W/w:move up|A/a:move left|S/s:move down|D/d:move right|Q/q:quit game|I/i:show information|B/b: open bags
+
+
+
+monster move from [0, 2] to [0, 3]
+monster move from [3, 2] to [3, 3]
+monster move from [6, 2] to [6, 3]
+Now it is hero Sehanine_Monnbow's turn.
+V   V   X   V   V   X   V   V   
+B       X   C   C   X   B   K   
+C       X   K   B   X   B   B   
+   M    X      MB   X   C  M    
+B       X           X   K   K   
+    C   X   C   C   X       C   
+K       X    H2 B   X    H3     
+HH1 H   X   H   H   X   H   H   
+
+You are near a Market! You can input M/m to enter this market
+You can control your hero by following commands
+M/m:enter marketW/w:move up|A/a:move left|S/s:move down|D/d:move right|T/t:teleport|R/r:recall|Q/q:quit game|I/i:show information|B/b: open bags
+

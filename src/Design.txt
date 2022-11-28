@@ -1,0 +1,18 @@
+We choose to work mainly based on Ye Tian's code from last game and incorporate Dhruv Toshniwal's board class.
+The choice of Dhruv Toshniwal's board design is because
+1. It implements a color scheme to display the game.
+
+The choice of Ye Tian's general design is because
+1. It has independent combat and market classes to decouple these functionality from main game process.
+2. The game running process is divided into different session classes to handle different scenarios in the game.
+
+Overall design principle
+We use one package to construct one functionality/component of the game.
+These component packages including board, character, combat, inventory and market.
+The whole program starts running in main package and all actions needing user input and interaction is placed in this package. The RunGame class initialize the game board and 3 heroes. The BoardSession class is in charge of the game running.
+
+We think this design is correct because it decouples user interaction and underneath functionalities.
+When we change the code of Legends of Heroes and Monsters to Legends of Valor, this decoupling allowed us to do minimum modifications and is easy to divide labor.
+1. Two of us are able to change game running process and add new board features at the same time since they are only weakly coupled.
+2. We changed combat process while keep and reuse original combat methods.
+3. The original market and inventory components also doesn't undergo any large change.
